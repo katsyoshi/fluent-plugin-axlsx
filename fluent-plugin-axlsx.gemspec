@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/fluent-plugin-axlsx/version', __FILE__)
+$:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ["MATSUMOTO Katsuyoshi"]
   gem.email         = ["matsumoto.katsuyoshi+github@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{hoge}
+  gem.summary       = %q{foo}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
@@ -13,5 +13,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "fluent-plugin-axlsx"
   gem.require_paths = ["lib"]
-  gem.version       = Fluent::Plugin::Axlsx::VERSION
+  gem.version       = "0.0.1"
+
+  gem.add_dependency "fluentd"
+  gem.add_dependency "axlsx"
 end
