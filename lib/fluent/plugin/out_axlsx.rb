@@ -41,6 +41,7 @@ class AxlsxOutput < Output
     es.each do |time, record|
       row = []
       record.each do |key, val|
+        @workbook.rows[0].add_cell key unless @rec.assoc key
         @rec[key] = val
       end
       @rec.each do |k, v|
