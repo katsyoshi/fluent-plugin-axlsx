@@ -53,6 +53,10 @@ module Fluent
       serialize
     end
 
+    def package
+      @package ||= Axlsx::Package.new
+    end
+
     private
 
     def column_headers
@@ -67,11 +71,7 @@ module Fluent
       @package.serialize(path)
     end
 
-    def package
-      @package ||= Axlsx::Package.new
-    end
-
-    def workbook
+     def workbook
       package.workbook
     end
 
