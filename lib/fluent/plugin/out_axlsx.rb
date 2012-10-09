@@ -41,11 +41,11 @@ module Fluent
     private
 
     def to_xlsx(tag, es)
-      sheet_for(tag) do |sheet|
+      sheet_for(tag).tap do |sheet|
         sheet.add_row []
         es.each do |time, record|
-          column_headers = column_header | record.keys
-          sheet.add_row record.values.insert(Time.at(time), 0), :style => [@time_format]
+          @column_headers = column_headers | record.keys
+          sheet.add_row record.values.insert(0, time), :style => [@time_format]
         end
         # yes, I am cheeting!
         sheet.rows.first.send :array_to_cells, column_headers

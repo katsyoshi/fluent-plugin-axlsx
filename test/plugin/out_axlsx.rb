@@ -19,7 +19,18 @@ class AxlsxOutputTest < Test::Unit::TestCase
 
   def test_emit_creates_worksheet_for_tag
    driver = create_driver
-   driver.instance.emit('foo', [{"message" => "testing first", "message2" => "testing first another data"}], nil)
+   driver.instance.emit('foo', {Time.now => {"message1" => "testing first", "message2" => "testing first another data"}}, nil)
    assert_equal('foo', driver.instance.send(:package).workbook.worksheets.first.name)
   end
+
+  def test_emit_creates_column_headers
+    driver = create_driver
+    driver.instance.emit('bar', {Time.now => {"message1" => "testing first", "message2" => "testing first another data"}}, nil)
+    assert_equal('time', driver.instance.send(:package).workbook.worksheets.first.rows[0].cells[0].value)
+    assert_equal('message1', driver.instance.send(:package).workbook.worksheets.first.rows[0].cells[1].value)
+    assert_equal('message2', driver.instance.send(:package).workbook.worksheets.first.rows[0].cells[2].value)
+
+
+  end
+
 end
