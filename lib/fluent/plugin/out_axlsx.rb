@@ -8,7 +8,9 @@ module Fluent
 
     config_param :path, :string
     # config_param :worksheets, :string, :default => "main"
-    config_param :keys, :string, :default => nil
+    
+    
+    # PENDING @see configure TODOconfig_param :keys, :string, :default => nil
 
     def initialize
       super
