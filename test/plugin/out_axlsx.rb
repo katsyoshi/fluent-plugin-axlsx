@@ -7,8 +7,12 @@ class AxlsxOutputTest < Test::Unit::TestCase
     path test_output_axlsx.xlsx
   ]
 
-  def create_driver(config=CONFIG, tag='test')
-    Fluent::Test::BufferedOutputDriver.new(Fluent::AxlsxOutput, tag).configure(conf)
+  def create_driver(config=CONFIG)
+    Fluent::Test::OutputTestDriver.new(Fluent::AxlsxOutput).configure(config)
   end
-  
+
+  def test_configuration
+    driver = create_driver
+    assert_equal 'test_output_axlsx.xlsx', driver.instance.path
+  end
 end
