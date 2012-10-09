@@ -1,59 +1,78 @@
 module Fluent
-class AxlsxOutput < Output
-  Plugin.register_output('axlsx', self)
 
-  config_param :path, :string
-  config_param :worksheets, :string, :default => "main"
-  config_param :keys, :string, :default => nil
+  # The AxlsxOutput class exports fluend emmitions into an OOXML
+  #  spreadsheet document (xlsx)
+  class AxlsxOutput < Output
 
-  def initialize
-    super
-    require 'axlsx'
-    @xlsx = Axlsx::Package.new
-    @workbook = @xlsx.workbook
-    @rec = Hash.new
-  end
+    Plugin.register_output('axlsx', self)
 
-  def configure(conf)
-    super
-    @worksheet = @workbook.add_worksheet(:name => @worksheets.to_s)
-    keys = ['time']
-    if @keys
-      keys << @keys.split(',')
-      @keys.split(',').map do |k|
-        @rec[k] = nil
-      end
+    config_param :path, :string
+    # config_param :worksheets, :string, :default => "main"
+    config_param :keys, :string, :default => nil
+
+    def initialize
+      super
+      require 'axlsx'
     end
-    @worksheet.add_row(keys)
-    @time_format = @workbook.styles.add_style :format_code => 'hh:mm:ss'
-  end
 
-  def start
-  end
-
-  def shutdown
-  end
-
-  def format(tag, time, record)
-  end
-
-  def emit(tag, es, chunk)
-    es.each do |time, record|
-      row = []
-      record.each do |key, val|
-        @workbook.rows[0].add_cell key unless @rec.assoc key
-        @rec[key] = val
-      end
-      @rec.each do |k, v|
-        row << v
-        @rec[k] = nil
-      end
-      time = Time.at(time)
-      row.unshift(time)
-
-      @worksheet.add_row(row, :style => [@time_format])
+    def configure(conf)
+      super
+      # TODO - I like the csv keys idea in the configuration but I think it needs to be tag specific.
+      # e.g. dstat_keys foo, bar, biz.bang, hoge.hoge.hoge
+      # dot notation indicates nested keys
+      @time_format = workbook.styles.add_style :format_code => 'hh:mm:ss'
     end
-    @xlsx.serialize(path)
+
+    def start
+    end
+
+    def shutdown
+    end
+
+    def format(tag, time, record)
+    end
+
+    def emit(tag, es, chunk)
+      to_xlsx(tag, es)
+    end
+
+    private
+
+    def to_xlsx(tag, es)
+      sheet_for(tag) do |sheet|
+        sheet.add_row []
+        es.each do |time, record|
+          column_headers = column_header | record.keys
+          sheet.add_row record.values.insert(Time.at(time), 0), :style => [@time_format]
+        end
+        # yes, I am cheeting!
+        sheet.rows.first.send :array_to_cells, column_headers
+      end
+      serialize
+    end
+
+    private
+
+    def column_headers
+      @column_headers ||= ['time']
+    end
+
+    def sheet_for(tag)
+      workbook.sheet_by_name(tag) || workbook.add_worksheet(:name => tag)
+    end
+
+    def serialize
+      @package.serialize(path)
+    end
+
+    def package
+      @package ||= Axlsx::Package.new
+    end
+
+    def workbook
+      package.workbook
+    end
+
   end
-end
+
 end
