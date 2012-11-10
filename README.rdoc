@@ -1,6 +1,6 @@
 = Fluent::Plugin::Axlsx
 
-fluent-plugin-axlsx privdes output plugin for
+fluent-plugin-axlsx provides output plugin for fluentd
 
 = Installation
 

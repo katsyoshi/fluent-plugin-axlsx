@@ -4,9 +4,9 @@ $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["MATSUMOTO Katsuyoshi"]
   gem.email         = ["matsumoto.katsuyoshi+github@gmail.com"]
-  gem.description   = %q{hoge}
-  gem.summary       = %q{foo}
-  gem.homepage      = ""
+  gem.description   = %q{fluentd output plugin for excel}
+  gem.summary       = %q{fluentd output plugin for excel}
+  gem.homepage      = "https://github.com/katsyoshi/fluent-plugin-axlsx"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
